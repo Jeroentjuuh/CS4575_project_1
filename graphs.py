@@ -34,10 +34,15 @@ def get_column_from_csv(dict_list, col_name):
         all_cols.append(y)
         x = np.array(range(len(y)))*0.1
         
-        # plt.plot(x, y)
     return np.array(list(itertools.zip_longest(*all_cols, fillvalue=np.nan)))
 
-def create_watt_plot(watts_arr):
+def get_timestamps_from_results(results):
+    timestamps = get_column_from_csv(results, "Time").T
+    longest_timestamps = (~np.isnan(timestamps)).cumsum(1).argmax(1).argmax(0)
+    t = (timestamps[longest_timestamps] - timestamps[longest_timestamps][0])
+    return t.astype(int).tolist()
+
+def create_watt_plot(watts_arr, timestamps):
     watts_mean = np.nanmean(watts_arr, axis=1)
     watts_min = np.nanmin(watts_arr, axis=1)
     watts_max = np.nanmax(watts_arr, axis=1)
@@ -48,13 +53,13 @@ def create_watt_plot(watts_arr):
     for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
         plt.rcParams[param] = "0.2"
     for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
-        plt.rcParams[param] = "#fff"  # bluish dark grey
+        plt.rcParams[param] = "#fff"
     
-    df = pd.DataFrame({"Mean": watts_mean, "Min": watts_min, "Max": watts_max})
+    df = pd.DataFrame({"Mean": watts_mean, "Min": watts_min, "Max": watts_max}, index=timestamps)
     fig, ax = plt.subplots()
     df.plot(color=colors, ax=ax, linewidth=2.0)
     
-    # Redraw the data with low alpha and slighty increased linewidth:
+    # Glow effect
     n_shades = 10
     diff_linewidth = 1.07
     alpha_value = 0.6 / n_shades
@@ -79,7 +84,9 @@ def create_watt_plot(watts_arr):
     ax.grid(color="#eee")
     ax.set_xlim([ax.get_xlim()[0] - 0.2, ax.get_xlim()[1] + 0.2])  # to not have the markers cut off
     ax.set_ylim(0)
-    # 
+    
+    plt.ylabel("Power consumption (W)")
+    plt.xlabel("Time (ms)")
 
 def create_violin_plot(energy_list, labels):
     colors = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
@@ -138,15 +145,15 @@ if __name__ == "__main__":
     browser_results = read_csvs_with_name("results_browser_")
 
     app_watts_arr = get_column_from_csv(app_results, "SYSTEM_POWER (Watts)")
-    create_watt_plot(app_watts_arr)
+    create_watt_plot(app_watts_arr, get_timestamps_from_results(app_results))
     plt.title("Power draw on app (Watts)")
     plt.show(block=False)
 
     browser_watts_arr = get_column_from_csv(browser_results, "SYSTEM_POWER (Watts)")
-    create_watt_plot(browser_watts_arr)
+    create_watt_plot(browser_watts_arr, get_timestamps_from_results(browser_results))
     plt.title("Power draw on browser (Watts)")
     plt.show(block=False)
-
+    
     app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
     browser_power, browser_duration = read_summary_csv("data/results_app_summary.csv")
     create_violin_plot([app_power, browser_power], ["App", "Browser"])
