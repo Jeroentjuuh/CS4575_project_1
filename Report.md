@@ -7,7 +7,7 @@ This study follows a systematic methodology to ensure unbiased and replicable en
 To minimize external interference and for easier replicability, we will try that the environment is as controlled as possible by doing the following:
  - Close all unnecessary applications.
  - Disable notifications and background services.
- - Use a wired network connection instead of using Wi-Fi for better consistency.
+ - The experiment should have been done with a wired connection in order to obtain the best results, but this was not possible since at the time where the experiment was tested the only available connection was a 4G connection from the phone of one of the members of the group.
  - Set a fixed screen brightness and resolution and even turn off the display when the testing starts.
  - Ensure the device where the test is being done to be connected to a power source to avoid battery problems.
 
