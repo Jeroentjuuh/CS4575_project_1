@@ -19,6 +19,13 @@ def read_csvs_with_name(name):
         file_number += 1
     return results
 
+def read_summary_csv(filename):
+    with open("data/results_browser_summary.csv") as f:
+        f.readline()
+        power = list(map(float, f.readline().split(",")))
+        duration = list(map(float, f.readline().split(",")))
+        return power, duration
+
 def get_column_from_csv(dict_list, col_name):
     all_cols = []
     for i in range(len(dict_list)):
@@ -74,7 +81,56 @@ def create_watt_plot(watts_arr):
     ax.set_ylim(0)
     # 
 
+def create_violin_plot(energy_list, labels):
+    colors = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
+    plt.style.use("dark_background")
+    for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
+        plt.rcParams[param] = "0.2"
+    for param in ["figure.facecolor", "axes.facecolor", "savefig.facecolor"]:
+        plt.rcParams[param] = "#fff"
+    
+    fig, ax = plt.subplots()
 
+
+    vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
+    for i, pc in enumerate((vplot["bodies"])):
+        pc.set_facecolor(colors[i])
+        pc.set_edgecolor(colors[i])
+        pc.set_linewidth(2)
+        pc.set_alpha(0.4)
+    
+    linecolor = "#333"
+    bplot = plt.boxplot(energy_list, tick_labels=labels,
+        boxprops={"color": linecolor, "linewidth": 2},
+        whiskerprops={"color": linecolor},
+        medianprops={"color": linecolor},
+        capprops={"color": linecolor},
+        flierprops={"markeredgecolor": linecolor})
+    
+    # bplot_items = [bplot[i] for i in ['boxes', 'whiskers', 'fliers', 'medians', 'caps']]
+    # bplot_items = [list(row) for row in zip(*bplot_items)]
+
+    # for (i, pcs) in enumerate(bplot_items):
+    #     box, whisker, flier, median, cap = pcs
+    #     box.set_color("#000")
+    #     whisker.set_color("#000")
+    #     flier.set_color("#000")
+    #     median.set_color("#000")
+    #     cap.set_color("#000")
+
+    # Glow effect
+    n_shades = 10
+    diff_linewidth = 1.07
+    alpha_value = 0.6 / n_shades
+    for n in range(1, n_shades+1):
+        vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
+        for i, pc in enumerate((vplot["bodies"])):
+            pc.set_facecolor("none")
+            pc.set_edgecolor(colors[i])
+            pc.set_linewidth(2+(diff_linewidth*n))
+            pc.set_alpha(alpha_value)
+    
+    plt.ylabel("Energy Consumption (J)")
 
 if __name__ == "__main__":
     print("Reading graph data")
@@ -89,12 +145,10 @@ if __name__ == "__main__":
     browser_watts_arr = get_column_from_csv(browser_results, "SYSTEM_POWER (Watts)")
     create_watt_plot(browser_watts_arr)
     plt.title("Power draw on browser (Watts)")
+    plt.show(block=False)
+
+    app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
+    browser_power, browser_duration = read_summary_csv("data/results_app_summary.csv")
+    create_violin_plot([app_power, browser_power], ["App", "Browser"])
+    plt.title("Energy consumption distribution")
     plt.show()
-
-
-
-    
-
-
-
-    
