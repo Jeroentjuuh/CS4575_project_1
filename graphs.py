@@ -32,8 +32,8 @@ def get_column_from_csv(dict_list, col_name):
 
 def create_watt_plot(watts_arr):
     watts_mean = np.nanmean(watts_arr, axis=1)
-    watts_min = np.nanmax(watts_arr, axis=1)
-    watts_max = np.nanmin(watts_arr, axis=1)
+    watts_min = np.nanmin(watts_arr, axis=1)
+    watts_max = np.nanmax(watts_arr, axis=1)
     watts_std = np.nanstd(watts_arr, axis=1)
 
     colors = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
