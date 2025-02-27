@@ -147,15 +147,18 @@ if __name__ == "__main__":
     app_watts_arr = get_column_from_csv(app_results, "SYSTEM_POWER (Watts)")
     create_watt_plot(app_watts_arr, get_timestamps_from_results(app_results))
     plt.title("Power draw on app (Watts)")
+    plt.savefig("app_watts.png", dpi=300)
     plt.show(block=False)
 
     browser_watts_arr = get_column_from_csv(browser_results, "SYSTEM_POWER (Watts)")
     create_watt_plot(browser_watts_arr, get_timestamps_from_results(browser_results))
     plt.title("Power draw on browser (Watts)")
+    plt.savefig("browser_watts.png", dpi=300)
     plt.show(block=False)
     
     app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
     browser_power, browser_duration = read_summary_csv("data/results_browser_summary.csv")
     create_violin_plot([app_power, browser_power], ["App", "Browser"])
     plt.title("Energy consumption distribution")
+    plt.savefig("distribution.png", dpi=300)
     plt.show()
