@@ -20,7 +20,7 @@ def read_csvs_with_name(name):
     return results
 
 def read_summary_csv(filename):
-    with open("data/results_browser_summary.csv") as f:
+    with open(filename) as f:
         f.readline()
         power = list(map(float, f.readline().split(",")))
         duration = list(map(float, f.readline().split(",")))
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     plt.show(block=False)
     
     app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
-    browser_power, browser_duration = read_summary_csv("data/results_app_summary.csv")
+    browser_power, browser_duration = read_summary_csv("data/results_browser_summary.csv")
     create_violin_plot([app_power, browser_power], ["App", "Browser"])
     plt.title("Energy consumption distribution")
     plt.show()
