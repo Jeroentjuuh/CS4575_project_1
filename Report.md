@@ -52,3 +52,21 @@ Plot description:
 
  Even though both the App and the Browser are quite similar, the Browser's median and upper quartile appear slightly higher, this suggests that the overall energy usage can be marginally greater for the Browser across these tests.
 
+## Limitations
+While this study provides valuable insights into the energy consumption differences between the Jellyfin web browser interface and the native application, several limitations must be acknowledged:
+
+- Codec Testing: We tested only one video codec, so our results may not apply to other codecs that use hardware differently. 
+- Operating System: We tested exclusively on macOS, and results will likely vary on other operating systems due to differences in power management, hardware optimization, and system architecture.
+- Caching: We didn’t account for caching in the native app, which might store more data than the browser and affect power use over time.
+- Hardware: We tested on just one device, so the results might be different on others with different CPU, GPU, and power management capabilities.
+- Network Influence: Even though we used a wired connection, network conditions such as latency, bandwidth fluctuations, and server response times could still influence energy measurements.
+- Duration: We measured energy use for only 40 seconds, so we might have missed longer-term trends like power-saving or background optimizations.
+
+Despite these limitations, our study provides a useful baseline for comparing the energy efficiency of Jellyfin’s web and native app streaming experiences. Future work could expand on these findings by testing multiple codecs, operating systems, and hardware configurations and so on. 
+
+## Conclusion
+Our study compared the energy consumption of streaming Fast & Furious through the Jellyfin web browser interface and the Jellyfin native app. The results shows that both methods follow a similar power usage pattern, with an initial spike (~18W) followed by stabilization. However, the browser tends to have a slightly higher median energy consumption and fewer extreme dips than the app, indicating a steadier baseline. At the same time, the browser occasionally shows short bursts of activity that keep its peak power levels slightly elevated.
+
+While these findings provide insight into the energy efficiency of both approaches, our study had some limitations. We only tested one video codec, used a single hardware setup, and measured energy consumption over a short period. As a result, the findings may not fully apply to other conditions.
+
+Overall, this experiment serves as a starting point for understanding the impact of energy consumption across different approachesFuture research could explore different codecs, devices, operating systems, and longer playback durations to get a more complete picture of energy efficiency in media streaming applications.
