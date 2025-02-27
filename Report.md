@@ -60,7 +60,7 @@ While this study provides valuable insights into the energy consumption differen
 - Caching: We didn’t account for caching in the native app, which might store more data than the browser and affect power use over time.
 - Hardware: We tested on just one device, so the results might be different on others with different CPU, GPU, and power management capabilities.
 - Network Influence: Even though we used a wired connection, network conditions such as latency, bandwidth fluctuations, and server response times could still influence energy measurements.
-- Duration: We measured energy use for only 40 seconds, so we might have missed longer-term trends like power-saving or background optimizations.
+- Duration: We measured energy use for only 40 seconds, so we might have missed longer-term trends like power-saving features or background processes (such as software updates or notifications). These factors can affect energy consumption, but since our experiment was short, their impact over time remains unknown.
 
 Despite these limitations, our study provides a useful baseline for comparing the energy efficiency of Jellyfin’s web and native app streaming experiences. Future work could expand on these findings by testing multiple codecs, operating systems, and hardware configurations and so on. 
 
