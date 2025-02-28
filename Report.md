@@ -1,31 +1,70 @@
-# Energy Consumption Comparison: Web Browser vs Native Jellyfin App.
+# Energy Consumption Comparison: Web Browser vs. Native Jellyfin App
+
+Nowadays, for most applications both a browser based version and a native app exist. Tools make it easy to develop for both these targets. This research shows significant difference in energy usage of such a browser based version and a native version of the application Jellyfin. Which is a free software media system designed to watch your own videos from anywhere.
 
 ## Introduction
 
-Energy efficiency is a growing concern all over the world, and as sofware and AI develops in giant steps, it is also a concern in the software development area. As applications become more resource-intensive, understanding the energy consumption of different software configurations is essentail. In this experiment, we compare the energy consumption of streaming a small piece of a movie using the Jellyfin web browser interface versus the Jellyfin native application. By measuring the energy consumption of these two approaches, we aim to identify which method is more energy-efficient and under which circumstances.
+Energy efficiency is a growing concern all over the world, and as sofware and AI develops in giant steps, it is also a concern in the software development area. As applications become more resource-intensive, understanding the energy consumption of different software configurations is essentail.
+
 This study follows a systematic methodology to ensure unbiased and replicable energy measurements. The results of this experiment will help users and developers make informed decisions about optimizing software for energy efficiency.
+
+All code used for these experiments can be found [here](https://github.com/Jeroentjuuh/CS4575_project_1).
+
+### Program under test
+
+We will be comparing the energy usage of [Jellyfin](https://jellyfin.org/), a free open-source media server that is used for managing and streaming a media library. In this experiment, we compare the energy consumption of streaming a small piece of a movie using the web browser interface versus the Jellyfin native application. By measuring the energy consumption of these two approaches, we aim to identify which method is more energy-efficient and under which circumstances.
+
+### Video codecs
+
+We also investigate the difference between different video codecs, limiting our experiment to codecs that are supported on the webbrowser. A video codec is a piece of software that is used to compress and store video. The most popular codecs are H.264 and its more modern successor H.265, which are used in .mp4 files for example. A new codec that is gaining in popularity with users and streaming services is AV1, which is an open source codec aimed at achieving high image quality with low file sizes or bandwidth requirements. Since H.265 is not supported on webbrowsers, we will be testing H.264 and AV1.
+
+### Difference between app and browser
+
+To explain any differences between the energy usage of the browser and the native app, it is important to know the differences between the two. The interface of the browser and the native app are the same. For the webbrowser we will use Google Chrome which uses the V8 engine. The native app is written in C++ and uses QTWebEngine, which integrates the Chromium web engine into Qt. Qt is a framework for creating cross-platform user interfaces. This means that the user interface in both the webbrowser and the native app use the same V8 engine.
+
+The media player used for video and audio playback differes between the browser and native app. The webbrowser uses proprietary video codecs for which Google pays a licensing fee. The native app uses [mpv](https://github.com/mpv-player/mpv), which is an open-source media player. This means that the native app and Google Chrome use different softwar for decoding videos. It is also important to note that mpv supports a very large variety of video and audio codecs, whereas webbrowsers only support a small number of audio and video codecs. When an unsupported audio and/or video format is played back via the browser, the Jellyfin server will convert the unsupported format to H.264 in real-time. This uses a very large amount of energy, as video transcoding use 100% CPU on all cores. Therefore, playing unsupported formats (such as the popular H.265) on the browsers is guaranteed to use massively more energy than playing the same video in the native app. Because this result would not be particularly interesting, we did not measure this.
 
 ## Methodology
 
 ### Experimental Setup
 
-To minimize external interference and for easier replicability, we will try that the environment is as controlled as possible by doing the following:
+To compare the browser version to the native app we created an automatic testing script. We chose to use the Google Chrome browser and downloaded the most recent version of the MacOS Jellyfin application. The task consists of logging in to the jellyfin server, searching for a video and watching for a predefined amount of time before closing either the browser or app. Whichever we were testing.
 
-- Close all unnecessary applications.
-- Disable notifications and background services.
-- The experiment should have been done with a wired connection in order to obtain the best results, but this was not possible since the machine used for testing does not have a physical network connector. Therefore we used a phone hotspot from the phone of one of the members of the group to maintain consistency.
-- Set a fixed screen brightness and resolution and even turn off the display when the testing starts.
-- Ensure the device where the test is being done to be connected to a power source to avoid battery problems.
+For these experiments we had the automated script watch 30 seconds of video. To also include different video codecs we ran experiments on the video '2 Fast 2 Furious' which has an H.264 codec, and on the video 'Moana 2' which has an AV1 codec. For these experiments the same browser was used, and the same Jellyfin application was used.
+
+#### Hardware setup
+
+The experiments are performed using a MacOS laptop - see specs in the table below - for which all applications are closed that are not necessary to run MacOS. Additionaliy, all notifactions are disabled and even things like Bluetooth and AirDrop are disabled.
+For the experiments the intention was to run on a wired ethernet connection, as it is generally considered that wifi uses more energy than ethernet to transmit the same data. We do note, however, that this was not possible due to this specific laptop not having an ethernet connection and we were not in possesion of an usb-C to ethernet adapter. Therefore, to make sure we are consistent along all tests we ran connected to the hotspot of one of our group members.
+
+For the hardware setup we aimed to minimize any hardware related energy usage. With that in mind we wanted to run the experiments with the screen turned off. We ran in to an issue where one of the tests proved just a tiny bit flakey, therefore we had to inspect if our experiment had failed or not. We decided to have the screen on, but on a predefined brightness and with any automatic adjusting of screen brightness turned off. So we could still provide consistency along the different experiment runs. The video was also played back with the sound muted.
+
+Lastly, the machine was connected to the power outlet at all times. This was done to mitigate any inference in energy usage because of power saving modes. The laptop was also fully charged prior to starting experiments. We also made sure the system wouldn't sleep by using a builtin macos function called [caffeinate](https://ss64.com/mac/caffeinate.html). For which we had an extra terminal open.
+
+These settings all aimed to minimize external interference of energy measurement and for easier replicability. And therefore had a controlled environment.
+
+| Laptop       | MacBook Pro 14-inch 2023                |
+| ------------ | --------------------------------------- |
+| CPU          | Apple M2 Max (8p/4e) @ 3.49GHz/2.42Ghz  |
+| RAM          | 64 GB 6400MT/s                          |
+| GPU          | 30-core @ 13.6 TFLOPS                   |
+| OS           | MacOS Sequoia v15.3.1                   |
+| Display      | 14-inch Liquid Retina XDR @ 3024 x 1964 |
+| Battery      | 70-watt-hour lithium-polymer battery    |
+| Power supply | 96W USB-C Power Adapter 20.5V 4.7A      |
 
 ### Measurement Approach
 
-We used pyEnergiBridge to measure the energy consumption of the Jellyfin web browser interface and the Jellyfin native application while playing the same movie (2 Fast 2 Furious). The measurement process involves the following:
+We used pyEnergiBridge to measure the energy consumption of the Jellyfin web browser interface and the Jellyfin native application while playing the same movie. The measurement process involves the following:
 
 - Starting the energy measurement: Using EnergiBridgeRunner.start() before launching the playback.
 - Using the browser or application interface to navigate to the movie
-- Playing the movie for a fixed duration
+- Playing the movie for a fixed duration (30 seconds)
 - Stopping the measurement: Using EnergiBridgeRunner.stop() after the playback ends.
-- Recording the energy consumption and execution time in a csv file.
+- Recording the energy consumption (J) and execution time in a csv file.
+- After each measurement sleep for 30 seconds to make sure the next measurement does not include any tail energy consumption
+
+We used the energy consumption method over the average power draw since we include the energy startup cost of opening the browser or app and also close the application afterward. Therefore, this is a very defined task for which we can best use energy consumption.
 
 ## Results
 
