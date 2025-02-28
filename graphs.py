@@ -4,6 +4,7 @@ import itertools
 from pathlib import Path
 import csv
 import pandas as pd
+from scipy.stats import shapiro, ttest_ind
 
 def read_csvs_with_name(name):
     folder_path = Path("./data")
@@ -41,6 +42,12 @@ def get_timestamps_from_results(results):
     longest_timestamps = (~np.isnan(timestamps)).cumsum(1).argmax(1).argmax(0)
     t = (timestamps[longest_timestamps] - timestamps[longest_timestamps][0])
     return t.astype(int).tolist()
+
+def reject_outliers(data, m = 3.):
+    d = np.abs(data - np.median(data))
+    mdev = np.median(d)
+    s = d/mdev if mdev else np.zeros(len(d))
+    return data[s<m]
 
 def create_watt_plot(watts_arr, timestamps):
     watts_mean = np.nanmean(watts_arr, axis=1)
@@ -158,7 +165,18 @@ if __name__ == "__main__":
     
     app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
     browser_power, browser_duration = read_summary_csv("data/results_browser_summary.csv")
+    app_power = reject_outliers(np.array(app_power))
+    browser_power = reject_outliers(np.array(browser_power))
+
+    app_normal_test = shapiro(app_power)
+    browser_normal_test = shapiro(browser_power)
+    print("Shapiro-Wilk test for app:", app_normal_test)
+    print("Shapiro-Wilk test for browser:", browser_normal_test)
+
+    power_ttest = ttest_ind(browser_power, app_power, equal_var=False, alternative='two-sided')
+    print("Welch's t-test", power_ttest)
+
     create_violin_plot([app_power, browser_power], ["App", "Browser"])
     plt.title("Energy consumption distribution")
     plt.savefig("distribution.png", dpi=300)
-    plt.show()
+    plt.show(block=False)
