@@ -138,19 +138,20 @@ Three observations are clear from the distributions:
 
 While this study provides valuable insights into the energy consumption differences between the Jellyfin web browser interface and the native application, several limitations must be acknowledged:
 
-- Codec Testing: We tested only one video codec, so our results may not apply to other codecs that use hardware differently.
 - Operating System: We tested exclusively on macOS, and results will likely vary on other operating systems due to differences in power management, hardware optimization, and system architecture.
 - Caching: We didn’t account for caching in the native app, which might store more data than the browser and affect power use over time.
 - Hardware: We tested on just one device, so the results might be different on others with different CPU, GPU, and power management capabilities.
 - Network Influence: Due to limitations of the machine used for testing, we were not able to use a wired network connection, which could have influenced energy measurements.
 - Duration: We measured energy use for only around 40 seconds, so we might have missed longer-term trends like power-saving features or background processes (such as software updates or notifications). These factors can affect energy consumption, but since our experiment was short, their impact over time remains unknown.
 
-Despite these limitations, our study provides a useful baseline for comparing the energy efficiency of Jellyfin’s web and native app streaming experiences. Future work could expand on these findings by testing multiple codecs, operating systems, and hardware configurations and so on.
+Despite these limitations, our study provides a useful baseline for comparing the energy efficiency of Jellyfin’s web and native app streaming experiences. Future work could expand on these findings by testing multiple operating systems, hardware configurations and so on.
 
 ## Conclusion
 
-Our study compared the energy consumption of streaming Fast & Furious through the Jellyfin web browser interface and the Jellyfin native app. The results shows that both methods follow a similar power usage pattern, with an initial spike (~18W) followed by stabilization. However, the browser tends to have a slightly higher median energy consumption and fewer extreme dips than the app, indicating a steadier baseline. At the same time, the browser occasionally shows short bursts of activity that keep its peak power levels slightly elevated.
+Our study compared the energy consumption of streaming videos through the Jellyfin web browser interface and the Jellyfin native app. The results shows that both methods follow a similar power usage pattern, with an initial spike (~18W) followed by stabilization. However, the browser tends to have a slightly higher median energy consumption and fewer extreme dips than the app, indicating a steadier baseline. At the same time, the browser occasionally shows short bursts of activity that keep its peak power levels slightly elevated. We also conclude from the violin plots that browser energy usage is unstable. As we see normal distributed spread of energy usage compared to the app version. For which the energy usage is very stable.
 
-While these findings provide insight into the energy efficiency of both approaches, our study had some limitations. We only tested one video codec, used a single hardware setup, and measured energy consumption over a short period. As a result, the findings may not fully apply to other conditions.
+From our comparison of AV1 against H264 we also conclude that AV1 uses more energy, which is to be expected since it is a computationally heavier algorithm. This comparison is consistent across the browser version and the native version. We also conclude that the native version is consistently better when considering energy usage than the browser version.
 
-Overall, this experiment serves as a starting point for understanding the impact of energy consumption across different approachesFuture research could explore different codecs, devices, operating systems, and longer playback durations to get a more complete picture of energy efficiency in media streaming applications.
+While these findings provide insight into the energy efficiency of both approaches, our study had some limitations which should be kept in mind. As a result, the findings may not fully apply to all other scenarios. But, given these limitations and this scenario a user should use the native version over the browser version of Jellyfin.
+
+As future research these experiments should be ran for more codecs, devices, operating systems and a onger playback duration could also be considered to get a more complete picture of energy efficiency in native applications versus browser applications.
