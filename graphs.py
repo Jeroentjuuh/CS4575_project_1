@@ -106,7 +106,7 @@ def create_violin_plot(energy_list, labels):
     fig, ax = plt.subplots()
 
 
-    vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
+    vplot = plt.violinplot(energy_list, showmeans=False, showmedians=False, showextrema=False)
     for i, pc in enumerate((vplot["bodies"])):
         pc.set_facecolor(GRAPH_COLORS[i])
         pc.set_edgecolor(GRAPH_COLORS[i])
@@ -137,7 +137,7 @@ def create_violin_plot(energy_list, labels):
     diff_linewidth = 1.07
     alpha_value = 0.6 / n_shades
     for n in range(1, n_shades+1):
-        vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
+        vplot = plt.violinplot(energy_list, showmeans=False, showmedians=False, showextrema=False)
         for i, pc in enumerate((vplot["bodies"])):
             pc.set_facecolor("none")
             pc.set_edgecolor(GRAPH_COLORS[i])
@@ -147,36 +147,45 @@ def create_violin_plot(energy_list, labels):
     plt.ylabel("Energy Consumption (J)")
 
 if __name__ == "__main__":
-    print("Reading graph data")
-    app_results = read_csvs_with_name("results_app_")
-    browser_results = read_csvs_with_name("results_browser_")
 
-    app_watts_arr = get_column_from_csv(app_results, "SYSTEM_POWER (Watts)")
-    create_watt_plot(app_watts_arr, get_timestamps_from_results(app_results))
-    plt.title("Power draw on app (Watts)")
-    plt.savefig("app_watts.png", dpi=300)
-    plt.show(block=False)
+    for codec, codec_name in zip(["h264", "av1"], ["H.264", "AV1"]):
+        print("Reading graph data for codec", codec_name)
+        app_results = read_csvs_with_name(f"{codec}_results_app_")
+        browser_results = read_csvs_with_name(f"{codec}_results_browser_")
 
-    browser_watts_arr = get_column_from_csv(browser_results, "SYSTEM_POWER (Watts)")
-    create_watt_plot(browser_watts_arr, get_timestamps_from_results(browser_results))
-    plt.title("Power draw on browser (Watts)")
-    plt.savefig("browser_watts.png", dpi=300)
-    plt.show(block=False)
-    
-    app_power, app_duration = read_summary_csv("data/results_app_summary.csv")
-    browser_power, browser_duration = read_summary_csv("data/results_browser_summary.csv")
-    app_power = reject_outliers(np.array(app_power))
-    browser_power = reject_outliers(np.array(browser_power))
+        app_watts_arr = get_column_from_csv(app_results, "SYSTEM_POWER (Watts)")
+        create_watt_plot(app_watts_arr, get_timestamps_from_results(app_results))
+        plt.title(f"Power draw on app with {codec_name} codec (Watts)")
+        plt.savefig(f"{codec}_app_watts.png", dpi=300)
+        plt.show(block=False)
 
-    app_normal_test = shapiro(app_power)
-    browser_normal_test = shapiro(browser_power)
-    print("Shapiro-Wilk test for app:", app_normal_test)
-    print("Shapiro-Wilk test for browser:", browser_normal_test)
+        browser_watts_arr = get_column_from_csv(browser_results, "SYSTEM_POWER (Watts)")
+        create_watt_plot(browser_watts_arr, get_timestamps_from_results(browser_results))
+        plt.title(f"Power draw on browser with {codec_name} codec (Watts)")
+        plt.savefig(f"{codec}_browser_watts.png", dpi=300)
+        plt.show(block=False)
+        
+        app_power, app_duration = read_summary_csv(f"data/{codec}_results_app_summary.csv")
+        browser_power, browser_duration = read_summary_csv(f"data/{codec}_results_browser_summary.csv")
+        app_power = reject_outliers(np.array(app_power))
+        browser_power = reject_outliers(np.array(browser_power))
 
-    power_ttest = ttest_ind(browser_power, app_power, equal_var=False, alternative='two-sided')
-    print("Welch's t-test", power_ttest)
+        print("Performing statistical tests for", codec_name)
+        app_normal_test = shapiro(app_power)
+        browser_normal_test = shapiro(browser_power)
+        print("Shapiro-Wilk test for app:", app_normal_test)
+        print("Shapiro-Wilk test for browser:", browser_normal_test)
 
-    create_violin_plot([app_power, browser_power], ["App", "Browser"])
-    plt.title("Energy consumption distribution")
-    plt.savefig("distribution.png", dpi=300)
-    plt.show(block=False)
+        power_ttest = ttest_ind(browser_power, app_power, equal_var=False, alternative='two-sided')
+        print("Welch's t-test", power_ttest)
+
+        print("Effect size measurements")
+        browser_power_mean = np.mean(browser_power)
+        app_power_mean = np.mean(app_power)
+        print("Mean difference:", np.abs(browser_power_mean - app_power_mean))
+
+
+        create_violin_plot([app_power, browser_power], ["App", "Browser"])
+        plt.title(f"Energy consumption distribution with {codec_name} codec (J)")
+        plt.savefig(f"{codec}_distribution.png", dpi=300)
+        plt.show(block=False)
