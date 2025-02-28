@@ -125,6 +125,24 @@ Three observations are clear from the distributions:
 - The native app uses significantly less energy compared to the webbrowser. As seen in the graphs above, this is both caused by the startup and search phases using more energy in the browser. In addition, the energy usage while streaming takes longer to settle than witht the native app, and even then is still higher in the browser.
 - H.264 is more efficient than AV1 when it comes to energy usage. This is to be expected and in line with what was mentioned in the introduction. The AV1 codec is designed to use less bandwidth/storage than H.264. This does however result in it requiring more processing power to encode and decode, which is confirmed by our experiment.
 
+### Statistical significance
+
+To test whether the collected data resembles a normal distribution, we use the Shapiro-Wilk test. From the table below, we can conclude that all results resemble a normal distribution (p-value threshold is 0.05).
+
+| Run type      | Statistic | p-value |
+| ------------- | --------- | ------- |
+| App H.264     | 0.97      | 0.76    |
+| Browser H.264 | 0.97      | 0.48    |
+| App AV1       | 0.99      | 0.98    |
+| Browser AV1   | 0.96      | 0.31    |
+
+To test the significance of the results, we used Welch's t-test. From the table below, we can conclude that the results are statistically significant.
+
+| Comparison            | Statistic | p-value |
+| --------------------- | --------- | ------- |
+| App vs. Browser H.264 | 10.1      | 1.6e-11 |
+| App vs. Browser AV1   | 7.35      | 2.1e-08 |
+
 ## Implications of the Results
 
 - Start-Up Cost vs. Steady State: Both the App and the Browser show significant spikes in power usage at the beginning of the test. This penalty can be attributed to video buffering, decoding initialization and other overhead tasks. After a few seconds, power usage declines and settles into a more stable range. This represents normal playback once the buffering is complete and the decoder is running smoothly. The initial burst could be minimized, by optimizing buffering and preloading. If the app or browser could predict how much data was going to be needed for the next few seconds of playback, it might fetch it more efficiently, hence reducing the size or duration of the initial spike. Similarly, if the initial part of the video was delivered at a lower bitrate, just for a few seconds, it could shorten the time spent in high CPU/GPU usage while decoding large frames. Furthermore, making sure that the GPU driver or integrated graphics driver is up to date can help ensure the best hardware decode path is used. Additionally, only initializing components of the player like advanced UI elements, could help the system not to overload the system at once.
@@ -148,10 +166,10 @@ Despite these limitations, our study provides a useful baseline for comparing th
 
 ## Conclusion
 
-Our study compared the energy consumption of streaming videos through the Jellyfin web browser interface and the Jellyfin native app. The results shows that both methods follow a similar power usage pattern, with an initial spike (~18W) followed by stabilization. However, the browser tends to have a slightly higher median energy consumption and fewer extreme dips than the app, indicating a steadier baseline. At the same time, the browser occasionally shows short bursts of activity that keep its peak power levels slightly elevated. We also conclude from the violin plots that browser energy usage is unstable. As we see normal distributed spread of energy usage compared to the app version. For which the energy usage is very stable.
+Our study compared the energy consumption of streaming videos through the Jellyfin web browser interface and the Jellyfin native app. The results shows that both methods follow a similar power usage pattern, with an initial spike (~18W) followed by stabilization. However, the browser tends to have a significantly higher median energy consumption and more peaks than the app, indicating a less steady baseline. At the same time, the browser occasionally shows short bursts of activity that keep its peak power levels elevated. We also conclude from the violin plots that browser energy usage is unstable. As we see normal distributed spread of energy usage compared to the app version, for which the energy usage is very stable.
 
 From our comparison of AV1 against H264 we also conclude that AV1 uses more energy, which is to be expected since it is a computationally heavier algorithm. This comparison is consistent across the browser version and the native version. We also conclude that the native version is consistently better when considering energy usage than the browser version.
 
-While these findings provide insight into the energy efficiency of both approaches, our study had some limitations which should be kept in mind. As a result, the findings may not fully apply to all other scenarios. But, given these limitations and this scenario a user should use the native version over the browser version of Jellyfin.
+While these findings provide insight into the energy efficiency of both approaches, our study had some limitations which should be kept in mind. As a result, the findings may not fully apply to all other scenarios. But, given these limitations and this scenario we can conclude that a user should use the native version over the browser version of Jellyfin.
 
 As future research these experiments should be ran for more codecs, devices, operating systems and a onger playback duration could also be considered to get a more complete picture of energy efficiency in native applications versus browser applications.
