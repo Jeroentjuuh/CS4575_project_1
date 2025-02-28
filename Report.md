@@ -1,6 +1,6 @@
 # Jellyfin: Web Browser vs. Native App Energy Consumption Comparison
 
-Nowadays, for most applications both a browser based version and a native app exist. Tools make it easy to develop for both these targets. This research shows significant difference in energy usage of such a browser based version and a native version of the application Jellyfin. Which is a free software media system designed to watch your own videos from anywhere.
+Jellyfin is a free open-source media system designed to watch your own videos from anywhere. We compare the energy usage of the web interface vs. the native app on various codecs.
 
 ## Introduction
 
@@ -12,7 +12,7 @@ All code used for these experiments can be found [here](https://github.com/Jeroe
 
 ### Program under test
 
-We will be comparing the energy usage of [Jellyfin](https://jellyfin.org/), a free open-source media server that is used for managing and streaming a media library. In this experiment, we compare the energy consumption of streaming a small piece of a movie using the web browser interface versus the Jellyfin native application. By measuring the energy consumption of these two approaches, we aim to identify which method is more energy-efficient and under which circumstances.
+We will be comparing the energy usage of [Jellyfin](https://jellyfin.org/), a free open-source media server that is used for managing and streaming a media library. In this experiment, we compare the energy consumption of streaming a small piece of a movie using the web browser interface versus the Jellyfin client native application. By measuring the energy consumption of these two approaches, we aim to identify which method is more energy-efficient and under which circumstances.
 
 ### Video codecs
 
