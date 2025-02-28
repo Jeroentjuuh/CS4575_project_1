@@ -136,7 +136,7 @@ To test whether the collected data resembles a normal distribution, we use the S
 | App AV1       | 0.99      | 0.98    |
 | Browser AV1   | 0.96      | 0.31    |
 
-To test the significance of the results, we used Welch's t-test. From the table below, we can conclude that the results are statistically significant.
+To test the significance of the results, we used Welch's t-test. From the table below, we can conclude that the results are statistically significant (p-value thereshold 0.05).
 
 | Comparison            | Statistic | p-value |
 | --------------------- | --------- | ------- |
