@@ -6,6 +6,8 @@ import csv
 import pandas as pd
 from scipy.stats import shapiro, ttest_ind
 
+GRAPH_COLORS = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
+
 def read_csvs_with_name(name):
     folder_path = Path("./data")
     file_number = 1
@@ -55,7 +57,6 @@ def create_watt_plot(watts_arr, timestamps):
     watts_max = np.nanmax(watts_arr, axis=1)
     watts_std = np.nanstd(watts_arr, axis=1)
 
-    colors = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
     plt.style.use("dark_background")
     for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
         plt.rcParams[param] = "0.2"
@@ -64,7 +65,7 @@ def create_watt_plot(watts_arr, timestamps):
     
     df = pd.DataFrame({"Mean": watts_mean, "Min": watts_min, "Max": watts_max}, index=timestamps)
     fig, ax = plt.subplots()
-    df.plot(color=colors, ax=ax, linewidth=2.0)
+    df.plot(color=GRAPH_COLORS, ax=ax, linewidth=2.0)
     
     # Glow effect
     n_shades = 10
@@ -75,7 +76,7 @@ def create_watt_plot(watts_arr, timestamps):
             alpha=alpha_value,
             legend=False,
             ax=ax,
-            color=colors)
+            color=GRAPH_COLORS)
     
     # Color the areas below the lines:
     # for column, color in zip(df, colors):
@@ -86,7 +87,7 @@ def create_watt_plot(watts_arr, timestamps):
     #                     alpha=0.1)
     
     # Fill area of std deviation
-    plt.fill_between(df.index, watts_mean - watts_std, watts_mean + watts_std, alpha=0.2, color=colors[0])
+    plt.fill_between(df.index, watts_mean - watts_std, watts_mean + watts_std, alpha=0.2, color=GRAPH_COLORS[0])
     
     ax.grid(color="#eee")
     ax.set_xlim([ax.get_xlim()[0] - 0.2, ax.get_xlim()[1] + 0.2])  # to not have the markers cut off
@@ -96,7 +97,6 @@ def create_watt_plot(watts_arr, timestamps):
     plt.xlabel("Time (ms)")
 
 def create_violin_plot(energy_list, labels):
-    colors = ["#00ff41","#FE53BB","#F5D300","#08F7FE"]
     plt.style.use("dark_background")
     for param in ["text.color", "axes.labelcolor", "xtick.color", "ytick.color"]:
         plt.rcParams[param] = "0.2"
@@ -108,8 +108,8 @@ def create_violin_plot(energy_list, labels):
 
     vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
     for i, pc in enumerate((vplot["bodies"])):
-        pc.set_facecolor(colors[i])
-        pc.set_edgecolor(colors[i])
+        pc.set_facecolor(GRAPH_COLORS[i])
+        pc.set_edgecolor(GRAPH_COLORS[i])
         pc.set_linewidth(2)
         pc.set_alpha(0.4)
     
@@ -140,7 +140,7 @@ def create_violin_plot(energy_list, labels):
         vplot = plt.violinplot([app_power, browser_power], showmeans=False, showmedians=False, showextrema=False)
         for i, pc in enumerate((vplot["bodies"])):
             pc.set_facecolor("none")
-            pc.set_edgecolor(colors[i])
+            pc.set_edgecolor(GRAPH_COLORS[i])
             pc.set_linewidth(2+(diff_linewidth*n))
             pc.set_alpha(alpha_value)
     
