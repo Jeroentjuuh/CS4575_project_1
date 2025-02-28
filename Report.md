@@ -1,4 +1,4 @@
-# Energy Consumption Comparison: Web Browser vs. Native Jellyfin App
+# Jellyfin: Web Browser vs. Native App Energy Consumption Comparison
 
 Nowadays, for most applications both a browser based version and a native app exist. Tools make it easy to develop for both these targets. This research shows significant difference in energy usage of such a browser based version and a native version of the application Jellyfin. Which is a free software media system designed to watch your own videos from anywhere.
 
@@ -32,7 +32,7 @@ To compare the browser version to the native app we created an automatic testing
 
 For these experiments we had the automated script watch 30 seconds of video. To also include different video codecs we ran experiments on the video '2 Fast 2 Furious' which has an H.264 codec, and on the video 'Moana 2' which has an AV1 codec. For these experiments the same browser was used, and the same Jellyfin application was used.
 
-#### Hardware setup
+### Hardware setup
 
 The experiments are performed using a MacOS laptop - see specs in the table below - for which all applications are closed that are not necessary to run MacOS. Additionaliy, all notifactions are disabled and even things like Bluetooth and AirDrop are disabled.
 For the experiments the intention was to run on a wired ethernet connection, as it is generally considered that wifi uses more energy than ethernet to transmit the same data. We do note, however, that this was not possible due to this specific laptop not having an ethernet connection and we were not in possesion of an usb-C to ethernet adapter. Therefore, to make sure we are consistent along all tests we ran connected to the hotspot of one of our group members.
@@ -67,6 +67,12 @@ We used pyEnergiBridge to measure the energy consumption of the Jellyfin web bro
 We used the energy consumption method over the average power draw since we include the energy startup cost of opening the browser or app and also close the application afterward. Therefore, this is a very defined task for which we can best use energy consumption.
 
 ## Results
+
+![h264 app](../img/p1_measuring_software/g14_jellyfin_browser_native/h264_app_watts.png)
+
+![h264 browser](../img/p1_measuring_software/g14_jellyfin_browser_native/h264_browser_watts.png)
+
+![h264 dist](../img/p1_measuring_software/g14_jellyfin_browser_native/h264_distribution.png)
 
 ### Power Draw on the App
 
