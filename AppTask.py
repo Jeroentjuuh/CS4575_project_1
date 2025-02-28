@@ -11,10 +11,7 @@ class AppTask(TaskBase):
 
         super().__init__("AppTask", "Open an app and perform a task")
 
-    def run(self, video = None, watchtime = 30):
-        if video is None:
-            raise ValueError("Video is required to be able to run an AppTask")
-        
+    def open(self):
         pyautogui.keyDown('command')
         pyautogui.press('space')
         pyautogui.keyUp('command')
@@ -22,25 +19,15 @@ class AppTask(TaskBase):
         pyautogui.write('Jellyfin')
         pyautogui.press('return')
 
-        sleep(5)
+    def run(self, video = None, watchtime = 30):
+        if video is None:
+            raise ValueError("Video is required to be able to run an AppTask")
 
-        screenWidth, screenHeight = pyautogui.size()
-        currentMouseX, currentMouseY = pyautogui.position()
-        x, y = pyautogui.locateCenterOnScreen('searchIcon.png', confidence=0.9, grayscale=True)
-        print(screenWidth, screenHeight)
-        print(currentMouseX, currentMouseY)
-        print(x, y)
-        pyautogui.click(x/2, y/2)
+        pyautogui.click(2864/2, 189/2)
 
-        pyautogui.write('2 fast 2 furious')
-        loaded = False
-        while loaded is False:
-            try:
-                x, y = pyautogui.locateCenterOnScreen('2Fast2Furious.png', confidence=0.9, grayscale=True)
-                loaded = True
-            except:
-                sleep(1)
-        pyautogui.click(x/2, y/2)
+        pyautogui.write(video)
+        sleep(2.5)
+        pyautogui.click(282/2, 836/2)
 
         sleep(watchtime)
 
